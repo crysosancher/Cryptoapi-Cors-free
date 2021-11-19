@@ -1,14 +1,38 @@
 const express = require('express')
+const axios=require('axios')
 const path=require('path')
 const app = express()
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 8000;
 const cors = require('cors');
 app.use(cors({
     origin: '*'
 }));
-app.get('/', (req, res) => {
+const price=async()=>{
+  var confiq={
+    method:'GET',
+    url:'https://api.wazirx.com/api/v2/tickers'
+  }
+  let ms;
+  return await axios.request(confiq).then((res)=>{
+    ms=res.data;
+    //console.log(ms);
+    return ms;
+}).catch((error)=>{
+  ms="DAta error"
+  return ms; 
+})
+}
+app.get('/',async (req, res) => {
+  
 
-  res.json({"Himanshu Lomda": 69})
+ //let k= await res.json(`${price()}`)
+ await price().then(data=>{
+   console.log(data);
+   res.json(data);
+ }).catch((err)=>{
+   res.json({gandu:12})
+ });
+//  await res.json(`${k}`)
 })
 
 app.listen(port, () => {
